@@ -1,0 +1,50 @@
+/* Create random color for brands */
+/* http://geoffgraham.me/randomize-sass */
+
+$s-min: 20;
+$s-max: 70;
+$l-min: 30;
+$l-max: 90;
+
+#boards {
+	display: flex;
+	flex-wrap: wrap;
+	.board {
+	  width: 23.5%;
+    padding: 0;
+    margin: 0 2% 8px 0;
+    -webkit-transform: translate(0);
+    transform: translate(0);
+    background-color: hsl(random(360),$s-min+random($s-max+-$s-min),$l-min+random($l-max+-$l-min));
+    .board-tile {
+    	&:hover,
+	    &:focus {
+				text-decoration: none;
+	    }
+	    .board-details {
+	    	padding: 15px;
+		    height: 100px;
+		    .board-title {
+			    color: #fff;
+			    font-size: 16px;
+			    font-weight: 700;
+		    }
+	    }
+    }
+	}
+}
+
+.Modal {
+  width: 600px;
+  margin: 30px auto;
+  background-color: #fff;
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0000009c;
+}
