@@ -43,18 +43,25 @@ document.getElementById("error").innerHTML = "";
     };  
    await axios.post(`${TRELLO_API}/login`, { user })
    .then(res => {
-     this.state.token = res.data
+     this.state.token = res.data.token
       window.localStorage.setItem('token',this.state.token);
       console.log(res);
+      console.log(res.data);
      // localStorage.setItem("status",res.status);
       if (localStorage != null) {
-        this.props.history.push('/dashboard');
+        if(res.data.flag === true){
+          this.props.history.push('/managerBoard');
+        }
+        else{
+          this.props.history.push('/dashboard');
+        }
+        
       }      
     })
     .catch(res =>{
       console.log("Username or Password Wrong!",res);
       document.getElementById("error").innerHTML = "<font color='red'><b><center> Username or password is incorrect </center></b></font>"
-       // this.props.history.push('/login');
+       this.props.history.push('/login');
     })
   };
   render() {

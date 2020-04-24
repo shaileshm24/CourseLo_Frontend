@@ -8,14 +8,15 @@ import autoBind from 'auto-bind';
 import ReactModal from 'react-modal';
 import axios from 'axios';
 import {TRELLO_API} from '../utils/constants'
-class Boards extends React.Component {
+class ManagerDashboard extends React.Component {
   constructor(props) {
     super(props);
     autoBind(this);
     this.el = document.createElement('div');
     
     this.state = {
-      showModal: false,
+      showuserModal: false,
+      showModal:false,
       token : window.localStorage.getItem('token')
       
     };
@@ -23,7 +24,7 @@ class Boards extends React.Component {
 
   handleOpenModal= async() =>{
     console.log(this.state.token);
-    this.setState({ showModal: true });
+    this.setState({ showuserModal: true });
     await axios.get(`${TRELLO_API}/verify`, {
       headers: {
         'Authorization': `Basic ${this.state.token}`
@@ -34,8 +35,24 @@ class Boards extends React.Component {
      });
   }
 
+
+  handleOpenEmployeeModal= async() =>{
+    console.log(this.state.token);
+    this.setState({ showModal: true });
+    await axios.get(`${TRELLO_API}/employees`, {
+      headers: {
+        'Authorization': `Basic ${this.state.token}`
+      }
+    }).then(res => {
+      let result = res.data;
+        this.setState(result); 
+     });
+  }
+
   handleCloseModal() {
+    this.setState({ showuserModal: false });
     this.setState({ showModal: false });
+    this.setState(null)
   }
 
   logout = async()=>{
@@ -47,6 +64,7 @@ class Boards extends React.Component {
 
   render() {
     let { match } = this.props;
+    let { showuserModal } = this.state;
     let { showModal } = this.state;
     let res = this.state;
     console.log(res)
@@ -57,11 +75,45 @@ class Boards extends React.Component {
           <Button color="primary" onClick={this.handleOpenModal}>
             Check Profile
           </Button>
+          <span> <Button color="primary" onClick={this.handleOpenEmployeeModal}>
+            Employee Details
+          </Button></span>
           <div><Button color="secondary" onClick={this.logout}>
             Logout
           </Button>
           </div>
           
+          <ReactModal
+          isOpen={showModal}
+          className="Modal"
+          overlayClassName="Overlay"
+          contentLabel="Inline Styles Modal Example">
+            
+            <div>
+          <Table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Email</th>
+          <th>Designation</th>
+          <th>Manager</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th scope="row">1</th>
+          <td><input type="text" value={res.email} ></input></td>
+          <td><input type="text" value={res.role} /></td>
+          <td><input type="text" value={res.manager} /></td>
+        </tr>
+        </tbody>
+        </Table>
+            </div>
+           
+          <Button color= "primary" onClick={this.handleCloseModal}>Close Modal</Button>
+        </ReactModal>
+        
          
         </h1>
         {/*<div id="boards">
@@ -80,13 +132,13 @@ class Boards extends React.Component {
           </div>*/}
 
         <ReactModal
-          isOpen={showModal}
+          isOpen={showuserModal}
           className="Modal"
           overlayClassName="Overlay"
           contentLabel="Inline Styles Modal Example">
             
             <div>
-            <Table>
+          <Table>
       <thead>
         <tr>
           <th>#</th>
@@ -114,7 +166,7 @@ class Boards extends React.Component {
   }
 }
 
-export default Boards;
+export default ManagerDashboard;
 
 
 {/* <div>

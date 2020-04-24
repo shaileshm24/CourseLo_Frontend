@@ -18,10 +18,16 @@ class Register extends React.Component {
     this.state = {
       name: '',
       email: '',
-      pass: ''
+      password: '',
+      role:'',
+      manager:''
     };
   }
 
+  handleNameChange = event => {
+    this.setState({ name: event.target.value });
+    //console.log(this.state.name,"this.state.name");
+  };
   handleRoleChange = event => {
     this.setState({ role: event.target.value });
     //console.log(this.state.name,"this.state.name");
@@ -45,18 +51,24 @@ class Register extends React.Component {
     event.preventDefault();
 
     const user = {
+      name:this.state.name,
       email: this.state.email,
       password: this.state.password,
       role: this.state.role,
       manager: this.state.manager
     };
 console.log(user);
-    axios.post("http://localhost:3020/api/token", { user }).then(res => {
+    axios.post("http://localhost:3020/api/signup", { user }).then(res => {
       console.log("===============",res)
       if (res.status === 200) {
         this.props.history.push('/login');
       }
-    });
+    })
+    .catch(res => {
+      console.log("Manager Not found",res);
+      document.getElementById("error").innerHTML = "<font color='red'><b><center> Manager Not Found </center></b></font>"
+      // this.props.history.push('/login');
+    })
   };
 
   render() {
@@ -64,6 +76,20 @@ console.log(user);
       <div id="sign-up" className="container">
         <h1>Sign up to CourseLo</h1>
         <Form horizontal onSubmit={this.handleSubmit}>
+        <FormGroup controlId="formHorizontalName">
+            <Col componentClass={ControlLabel} sm={2}>
+              Name
+            </Col>
+            <Col sm={10}>
+              <FormControl
+                type="name"
+                placeholder="First Name                                Last Name"
+                name="name"
+                required
+                onChange={this.handleNameChange}
+              />
+            </Col>
+            </FormGroup>
             <FormGroup controlId="formHorizontalEmail">
             <Col componentClass={ControlLabel} sm={2}>
               Email
@@ -120,6 +146,7 @@ console.log(user);
               />
             </Col>
           </FormGroup>
+          <p id = "error"></p>
            <FormGroup className="form-actions">
             <Col smOffset={2} sm={10}>
               <Button type="submit" bsSize="large" block bsStyle="success">
