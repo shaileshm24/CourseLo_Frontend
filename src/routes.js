@@ -17,7 +17,7 @@ const Routes = ({ match }) => (
       <Route exact path={'/login'} component={Login} />
       <Route exact path={'/managerBoard'} component={ManagerDashboard} />
       {
-        window.localStorage.token != null ? <> <Route exact path={'/dashboard'} component={Dashboard} /> </>:
+        window.localStorage.token != null ? <> <Route exact path={'/dashboard'} component={Dashboard}   /> </>:
        <Redirect  to = "/" />
       }
       

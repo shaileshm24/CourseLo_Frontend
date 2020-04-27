@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Image, NavItem } from 'react-bootstrap';
 
+
 function Header() {
   return (
     <header id="header">
@@ -9,7 +10,7 @@ function Header() {
         <Navbar.Header>
           <Navbar.Brand>
             <Link to={`/`}>
-              <Image src="/images/trello-logo-black.svg" responsive />
+              <Image src="/images/logo1.svg" responsive />
             </Link>
           </Navbar.Brand>
           <Navbar.Toggle />

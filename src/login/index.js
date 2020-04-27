@@ -36,13 +36,12 @@ class Login extends React.Component {
     
 document.getElementById("error").innerHTML = "";
 
-
       const user = {
       email: this.state.email,
       password: this.state.password
     };  
    await axios.post(`${TRELLO_API}/login`, { user })
-   .then(res => {
+    .then(res => {
      this.state.token = res.data.token
       window.localStorage.setItem('token',this.state.token);
       console.log(res);

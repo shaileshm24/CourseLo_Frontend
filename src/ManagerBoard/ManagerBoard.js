@@ -11,14 +11,18 @@ import {TRELLO_API} from '../utils/constants'
 class ManagerDashboard extends React.Component {
   constructor(props) {
     super(props);
+   
     autoBind(this);
     this.el = document.createElement('div');
-    
+   
     this.state = {
       showuserModal: false,
       showModal:false,
-      token : window.localStorage.getItem('token')
-      
+      token : window.localStorage.getItem('token'),
+      res:'',
+      employee:{
+        response:[]
+      }    
     };
   }
 
@@ -43,9 +47,9 @@ class ManagerDashboard extends React.Component {
       headers: {
         'Authorization': `Basic ${this.state.token}`
       }
-    }).then(res => {
-      let result = res.data;
-        this.setState(result); 
+    }).then(response => {
+       // console.log(response.data);
+        this.setState({employee:response.data}); 
      });
   }
 
@@ -67,21 +71,28 @@ class ManagerDashboard extends React.Component {
     let { showuserModal } = this.state;
     let { showModal } = this.state;
     let res = this.state;
-    console.log(res)
+    let result = this.state.employee;
+    let data = []
+    for (var i =0 ; i < result.length ; i++){
+    data = result[i];
+    console.log(data);
+    };
+   
     return (
       <section className="page container">
         <h1>
           Boards{' '}
+          <br></br>
           <Button color="primary" onClick={this.handleOpenModal}>
             Check Profile
           </Button>
-          <span> <Button color="primary" onClick={this.handleOpenEmployeeModal}>
+          <Button color="primary" style={{"padding":"2%"}} onClick={this.handleOpenEmployeeModal}>
             Employee Details
-          </Button></span>
-          <div><Button color="secondary" onClick={this.logout}>
+          </Button>
+         <Button color="secondary" onClick={this.logout} style={{"marginLeft":"80%"}}>
             Logout
           </Button>
-          </div>
+         
           
           <ReactModal
           isOpen={showModal}
@@ -97,16 +108,19 @@ class ManagerDashboard extends React.Component {
           <th>Email</th>
           <th>Designation</th>
           <th>Manager</th>
+          <th></th>
         </tr>
       </thead>
+     
       <tbody>
-        
+     
         <tr>
           <th scope="row">1</th>
-          <td><input type="text" value={res.email} ></input></td>
-          <td><input type="text" value={res.role} /></td>
-          <td><input type="text" value={res.manager} /></td>
-        </tr>
+          <td><input type="text" value={data.email} /></td>
+          <td><input type="text" value={data.role} /></td>
+          <td><input type="text" value={data.manager} /></td>
+          <td><input class="btn btn-sm btn-primary" type="submit" value="Assign"/></td>
+          </tr> 
         </tbody>
         </Table>
             </div>

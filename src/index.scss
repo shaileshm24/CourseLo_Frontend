@@ -1,3 +1,39 @@
 body {
 	font-family: 'Open Sans', sans-serif;
 }
+.navbar-default {
+    background-color: #ace6ed;
+	border-color: #286090;
+	margin: auto;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.navbar {
+    position: relative;
+    min-height: 65px;
+	margin-bottom: 20px;
+    border: 1px solid transparent;
+}
+.navbar-brand {
+	padding: 5px;
+	img {
+		max-width: 120px;
+		max-height: 40px;
+	}
+}
+
+.navbar-nav>li>a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+	margin-right: 35px;
+}
+
+.Modal {
+width :700px;
+}
+
+.App{
+	background-image: url("https://mk0thinkificig8baqk3.kinstacdn.com/wp-content/themes/thinkific/assets/images/home/home-features-background.jpg");
+	background-size: contain;
+}
