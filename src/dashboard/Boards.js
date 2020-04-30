@@ -54,13 +54,14 @@ class Boards extends React.Component {
       <section className="page container">
         <h1>
           Boards{' '}
-          <Button color="primary" onClick={this.handleOpenModal}>
+          <br></br>
+          <Button color="btn btn-success" onClick={this.handleOpenModal}>
             Check Profile
           </Button>
-          <div><Button color="secondary" onClick={this.logout}>
+         <Button color="btn btn-danger" style={{"marginLeft":"75%"}} onClick={this.logout}>
             Logout
           </Button>
-          </div>
+         
           
          
         </h1>
@@ -106,7 +107,7 @@ class Boards extends React.Component {
         </Table>
             </div>
            
-          <Button color= "primary" onClick={this.handleCloseModal}>Close Modal</Button>
+            <div class="closeModal"><Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
         </ReactModal>
         
       </section>

@@ -1,5 +1,7 @@
 body {
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Times New Roman',Times, serif;
+	font-style: oblique;
+	
 }
 .navbar-default {
     background-color: #ace6ed;
@@ -7,6 +9,15 @@ body {
 	margin: auto;
     margin-left: 40px;
     margin-right: 40px;
+}
+
+.signup{
+	color: orange;
+	font-size: 20px;
+}
+.login{
+	color:lightgreen;
+	font-size: 30px;
 }
 
 .navbar {
@@ -35,5 +46,15 @@ width :700px;
 
 .App{
 	background-image: url("https://mk0thinkificig8baqk3.kinstacdn.com/wp-content/themes/thinkific/assets/images/home/home-features-background.jpg");
-	background-size: contain;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.closeModal{
+	padding-bottom:10px;
+	position: inherit;
+	margin-left: 85.5%;
+}
+.label{
+	color:white;
+	font-size: 25px;
 }

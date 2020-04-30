@@ -3,6 +3,7 @@ import React from 'react';
 import {
  Table,Button
 } from 'reactstrap';
+import Header from '../components/userheader.js';
 
 import autoBind from 'auto-bind';
 import ReactModal from 'react-modal';
@@ -10,8 +11,13 @@ import axios from 'axios';
 import {TRELLO_API} from '../utils/constants'
 class ManagerDashboard extends React.Component {
   constructor(props) {
-    super(props);
    
+    super(props);
+    this.state = {
+      arrayname: [],
+      data: []
+    }
+  
     autoBind(this);
     this.el = document.createElement('div');
    
@@ -24,8 +30,31 @@ class ManagerDashboard extends React.Component {
         response:[]
       }    
     };
+   
   }
+  componentDidMount = async () =>{
 
+    await axios.get(`${TRELLO_API}/employees`, {
+      headers: {
+        'Authorization': `Basic ${this.state.token}`
+      }
+    }).then(response => {
+       // console.log(response.data);
+        this.setState({employee:response.data}); 
+     });
+
+
+    let result = this.state.employee;
+     this.state.data = result
+    // for (var i =1 ; i < result.length ; i++){
+    //  this.setState({ data: [...this.state.data, result[i]] }) ;
+     
+    // };
+    console.log(this.state.data);
+
+  
+  }
+ 
   handleOpenModal= async() =>{
     console.log(this.state.token);
     this.setState({ showuserModal: true });
@@ -43,14 +72,7 @@ class ManagerDashboard extends React.Component {
   handleOpenEmployeeModal= async() =>{
     console.log(this.state.token);
     this.setState({ showModal: true });
-    await axios.get(`${TRELLO_API}/employees`, {
-      headers: {
-        'Authorization': `Basic ${this.state.token}`
-      }
-    }).then(response => {
-       // console.log(response.data);
-        this.setState({employee:response.data}); 
-     });
+    
   }
 
   handleCloseModal() {
@@ -58,7 +80,14 @@ class ManagerDashboard extends React.Component {
     this.setState({ showModal: false });
     this.setState(null)
   }
-
+  getCourse = async () =>{
+    let userEmail = {
+      email: "nikhil@gmail.com"
+    }
+    await axios.post(`${TRELLO_API}/courses`,{userEmail}).then(res =>{
+      console.log(res);
+    })
+  }
   logout = async()=>{
     console.log(this.state.token)
         window.localStorage.clear();
@@ -71,28 +100,27 @@ class ManagerDashboard extends React.Component {
     let { showuserModal } = this.state;
     let { showModal } = this.state;
     let res = this.state;
-    let result = this.state.employee;
-    let data = []
-    for (var i =0 ; i < result.length ; i++){
-    data = result[i];
-    console.log(data);
-    };
    
     return (
+      <React.Fragment>
+      <Header/>
       <section className="page container">
         <h1>
           Boards{' '}
           <br></br>
-          <Button color="primary" onClick={this.handleOpenModal}>
+          <div>
+          <Button color="btn btn-success" style={{"marginLeft":"2%"}} onClick={this.handleOpenModal}>
             Check Profile
-          </Button>
-          <Button color="primary" style={{"padding":"2%"}} onClick={this.handleOpenEmployeeModal}>
+          </Button>        
+          <Button color="btn btn-warning" style={{"marginLeft":"10%"}} onClick={this.handleOpenEmployeeModal}>
             Employee Details
           </Button>
-         <Button color="secondary" onClick={this.logout} style={{"marginLeft":"80%"}}>
+          <Button color="btn btn-danger" onClick={this.logout} style={{"marginLeft":"50%"}}>
             Logout
           </Button>
          
+        
+          </div>
           
           <ReactModal
           isOpen={showModal}
@@ -104,7 +132,7 @@ class ManagerDashboard extends React.Component {
           <Table>
       <thead>
         <tr>
-          <th>#</th>
+          <th>No</th>
           <th>Email</th>
           <th>Designation</th>
           <th>Manager</th>
@@ -113,19 +141,22 @@ class ManagerDashboard extends React.Component {
       </thead>
      
       <tbody>
-     
-        <tr>
-          <th scope="row">1</th>
-          <td><input type="text" value={data.email} /></td>
-          <td><input type="text" value={data.role} /></td>
-          <td><input type="text" value={data.manager} /></td>
-          <td><input class="btn btn-sm btn-primary" type="submit" value="Assign"/></td>
+      {this.state.data !== undefined ? this.state.data.map(element => 
+                 <tr>
+          <th scope="row"></th>
+          <td><input type="text" value={element.email} /></td>
+          <td><input type="text" value={element.role} /></td>
+          <td><input type="text" value={element.manager} /></td>
+          <td><input class="btn btn-sm  btn-success" type="submit" value="Get Course" onClick={this.getCourse} /></td>
           </tr> 
+       
+      ): null}
+       
         </tbody>
         </Table>
             </div>
-           
-          <Button color= "primary" onClick={this.handleCloseModal}>Close Modal</Button>
+           <div class="closeModal"><Button color= "btn btn-sm btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
+          
         </ReactModal>
         
          
@@ -172,10 +203,11 @@ class ManagerDashboard extends React.Component {
         </Table>
             </div>
            
-          <Button color= "primary" onClick={this.handleCloseModal}>Close Modal</Button>
+            <div class="closeModal"> <Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
         </ReactModal>
         
       </section>
+      </React.Fragment>
     );
   }
 }
