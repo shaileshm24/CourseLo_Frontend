@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Nav, Image, NavItem } from 'react-bootstrap';
-import Login from '../login/index';
+import { Navbar, Nav, Image } from 'react-bootstrap';
+
 
 function Header() {
 

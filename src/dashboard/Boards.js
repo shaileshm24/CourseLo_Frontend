@@ -1,13 +1,16 @@
 import React from 'react';
-//import { Button } from 'react-bootstrap';
+import {Image } from 'react-bootstrap';
 import {
  Table,Button
 } from 'reactstrap';
-
+import { Link } from 'react-router-dom';
+import Header from '../components/userheader.js';
 import autoBind from 'auto-bind';
 import ReactModal from 'react-modal';
 import axios from 'axios';
-import {TRELLO_API} from '../utils/constants'
+import {TRELLO_API} from '../utils/constants';
+import {udemy} from '../utils/constants';
+
 class Boards extends React.Component {
   constructor(props) {
     super(props);
@@ -16,7 +19,12 @@ class Boards extends React.Component {
     
     this.state = {
       showModal: false,
-      token : window.localStorage.getItem('token')
+      token : window.localStorage.getItem('token'),
+      course:{
+        title: '',
+        url: '',
+        image_480x270: ''
+      }
       
     };
   }
@@ -30,8 +38,26 @@ class Boards extends React.Component {
       }
     }).then(res => {
       console.log(res)
-        this.setState(res.data); 
+        this.setState(res.data);
+        //this.setState({course:res.data.course}) 
      });
+  }
+
+  getCourse (url) {
+    window.open(udemy+url);
+  }
+
+  courseData =async ()=>{
+    this.setState({showModal:false});
+    await axios.get(`${TRELLO_API}/verify`, {
+      headers: {
+        'Authorization': `Basic ${this.state.token}`
+      }
+    }).then(res => {
+      console.log(res);
+        this.setState({course:res.data.course}) 
+     });
+
   }
 
   handleCloseModal() {
@@ -46,86 +72,75 @@ class Boards extends React.Component {
   }
 
   render() {
-    let { match } = this.props;
     let { showModal } = this.state;
     let res = this.state;
-    console.log(res)
+    let course = this.state.course;
+    // let course = res.course;
+//console.log("course.image_480x270,==============,course.title,==============,course.url",course.title);
     return (
+      <React.Fragment>
+      <Header/>
       <section className="page container">
         <h1>
           Boards{' '}
           <br></br>
-          <Button color="btn btn-success" onClick={this.handleOpenModal}>
+          <Button color="btn btn-success" style={{"marginLeft":"2%"}} onClick={this.handleOpenModal}>
             Check Profile
           </Button>
-         <Button color="btn btn-danger" style={{"marginLeft":"75%"}} onClick={this.logout}>
+         
+           <Button color="btn btn-danger" style={{"marginLeft":"50%"}} onClick={this.logout}>
             Logout
-          </Button>
-         
-          
-         
+          </Button>       
         </h1>
-        {/*<div id="boards">
-          {boards.map(b => (
-            <div key={b._id} className="board">
-              <Link
-                to={`${match.url}/b/${b._id}/${b.slug}`}
-                className="board-tile"
-              >
-                <div className="board-details">
-                  <span className="board-title">{b.name}</span>
-                </div>
-              </Link>
-            </div>
-          ))}
-          </div>*/}
 
         <ReactModal
           isOpen={showModal}
           className="Modal"
           overlayClassName="Overlay"
           contentLabel="Inline Styles Modal Example">
-            
-            <div>
+          <div>
             <Table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Email</th>
-          <th>Designation</th>
-          <th>Manager</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td><input type="text" value={res.email} ></input></td>
-          <td><input type="text" value={res.role} /></td>
-          <td><input type="text" value={res.manager} /></td>
-        </tr>
-        </tbody>
-        </Table>
-            </div>
+              <thead>
+                  <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Designation</th>
+                  <th>Manager</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td><input type="text" value={res.name} ></input></td>
+                  <td><input type="text" value={res.role} /></td>
+                  <td><input type="text" value={res.manager} /></td>
+                  <td><input type="text" value={res.email} /></td>
+
+                </tr>
+                </tbody>
+            </Table>
            
-            <div class="closeModal"><Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
+                  
+            </div>
+            <Button className="closeModal" color="btn btn-success" onClick={this.courseData}>Your Course</Button>
+            <div className="closeModal"><Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
         </ReactModal>
         
+        <h2>Your Course</h2>
+        <div className="card" >
+        <div className = "col-md-4 col-sm-12"  style={{ "backgroundColor" : "white" ,"paddingTop":"10px" }}>  
+        <Image className="card-img-top" src= {course.image_480x270} alt="Card image cap" responsive />
+        <div className="card-body">
+          <h3 className= "card-title" >Title:-  {course.title}</h3>
+          <hr style = {{"height":"2px","backgroundColor":"green","color":"green"}}></hr>
+          <Link to="#" style={{"fontSize":"26px","color":"green"}} onClick={this.getCourse.bind(this,course.url)}>Get Course Here</Link>
+       </div>
+        </div>
+        </div>
       </section>
+      </React.Fragment>
     );
   }
 }
 
 export default Boards;
-
-
-{/* <div>
-<Card>
-  <CardImg top width="100%" src="/images/team.jpg" alt="Card image cap" />
-  <CardBody>
-    <CardTitle>{res.email}</CardTitle>
-    <CardSubtitle>{res.role}</CardSubtitle>
-    <CardText> 
-    <p>Your Manager: <input type= "text" value = {res.manager} /></p></CardText>
-  </CardBody>
-</Card>
-</div> */}

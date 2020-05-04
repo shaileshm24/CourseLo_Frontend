@@ -12,7 +12,7 @@ body {
 }
 
 .signup{
-	color: orange;
+	color: rgb(231, 173, 64);
 	font-size: 20px;
 }
 .login{
@@ -46,8 +46,10 @@ width :700px;
 
 .App{
 	background-image: url("https://mk0thinkificig8baqk3.kinstacdn.com/wp-content/themes/thinkific/assets/images/home/home-features-background.jpg");
-	background-size: cover;
-	background-repeat: no-repeat;
+	height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .closeModal{
 	padding-bottom:10px;

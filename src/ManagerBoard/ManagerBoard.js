@@ -1,5 +1,5 @@
 import React from 'react';
-//import { Button } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 import {
  Table,Button
 } from 'reactstrap';
@@ -28,6 +28,9 @@ class ManagerDashboard extends React.Component {
       res:'',
       employee:{
         response:[]
+      },
+      courses:{
+        courseData:[]
       }    
     };
    
@@ -51,7 +54,6 @@ class ManagerDashboard extends React.Component {
      
     // };
     console.log(this.state.data);
-
   
   }
  
@@ -80,14 +82,37 @@ class ManagerDashboard extends React.Component {
     this.setState({ showModal: false });
     this.setState(null)
   }
-  getCourse = async () =>{
-    let userEmail = {
-      email: "nikhil@gmail.com"
+  getCourse = async (inputEmail) =>{
+    //this.setState({showModal:false});
+    console.log(inputEmail);
+     let userEmail = {
+      email: inputEmail
     }
+    this.setState({userEmail});
+    console.log(userEmail);
     await axios.post(`${TRELLO_API}/courses`,{userEmail}).then(res =>{
-      console.log(res);
+     
+     this.setState({courses:res.data}); 
+     
+     
     })
+    let courseValue = this.state.courses;
+    this.state.value = courseValue;
+    console.log(this.state.value); 
+   if (courseValue){
+    this.setState({showModal:false});   
+   }
   }
+
+  assignCourse = async(course)=>{
+    console.log(course);
+    let emailId = this.state.userEmail;
+    await axios.put(`${TRELLO_API}/assign`,{emailId,course}).then(res =>{
+      console.log(res);
+      window.location.reload();
+     })
+  }
+
   logout = async()=>{
     console.log(this.state.token)
         window.localStorage.clear();
@@ -96,7 +121,6 @@ class ManagerDashboard extends React.Component {
   }
 
   render() {
-    let { match } = this.props;
     let { showuserModal } = this.state;
     let { showModal } = this.state;
     let res = this.state;
@@ -128,8 +152,8 @@ class ManagerDashboard extends React.Component {
           overlayClassName="Overlay"
           contentLabel="Inline Styles Modal Example">
             
-            <div>
-          <Table>
+            <div class="table-responsive">
+          <table class="table table-striped">
       <thead>
         <tr>
           <th>No</th>
@@ -141,41 +165,46 @@ class ManagerDashboard extends React.Component {
       </thead>
      
       <tbody>
-      {this.state.data !== undefined ? this.state.data.map(element => 
-                 <tr>
-          <th scope="row"></th>
-          <td><input type="text" value={element.email} /></td>
-          <td><input type="text" value={element.role} /></td>
-          <td><input type="text" value={element.manager} /></td>
-          <td><input class="btn btn-sm  btn-success" type="submit" value="Get Course" onClick={this.getCourse} /></td>
-          </tr> 
+      {this.state.data !== undefined ? this.state.data.map((element,i) => 
+      
+        <tr> 
+          <th scope="row">{i}</th>
+          <td >{element.email}</td>
+          <td>{element.role}</td>
+          <td>{element.manager} </td>
+          <td><input className="btn btn-sm  btn-success" id="email"  type="submit" value="Get Course" onClick={this.getCourse.bind(this,element.email)} /></td>
+        </tr> 
        
-      ): null}
+  ): null}
        
         </tbody>
-        </Table>
+        </table>
             </div>
-           <div class="closeModal"><Button color= "btn btn-sm btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
+           <div className="closeModal"><Button color= "btn btn-sm btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
           
         </ReactModal>
         
-         
+        {this.state.value !== undefined ? this.state.value.map((element) => 
+      <div className="card">
+        <div className = "col-md-4 col-sm-12" style={{ "backgroundColor" : "white" ,"paddingTop":"10px" }}>  
+        <Image className="card-img-top" src= {element.image_480x270} alt="Card image cap" responsive />
+        <div className="card-body">
+          <h2 className= "card-title" >{element.title}</h2>
+          {/* <CardSubtitle>{element.url}</CardSubtitle> */}
+          {/* <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText> */}
+          <hr style = {{"height":"2px","backgroundColor":"green","color":"green"}}></hr>
+          <button className = "btn btn-success" style= {{paddingBottom:"5px"}} onClick={this.assignCourse.bind(this,element)}>Assign Course</button>
+       </div>
+        </div>
+        </div>
+        ): null}
+       
+        <br></br>
+  
+  
+                
         </h1>
-        {/*<div id="boards">
-          {boards.map(b => (
-            <div key={b._id} className="board">
-              <Link
-                to={`${match.url}/b/${b._id}/${b.slug}`}
-                className="board-tile"
-              >
-                <div className="board-details">
-                  <span className="board-title">{b.name}</span>
-                </div>
-              </Link>
-            </div>
-          ))}
-          </div>*/}
-
+    
         <ReactModal
           isOpen={showuserModal}
           className="Modal"
@@ -203,9 +232,9 @@ class ManagerDashboard extends React.Component {
         </Table>
             </div>
            
-            <div class="closeModal"> <Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
+            <div className="closeModal"> <Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
         </ReactModal>
-        
+
       </section>
       </React.Fragment>
     );
@@ -213,16 +242,3 @@ class ManagerDashboard extends React.Component {
 }
 
 export default ManagerDashboard;
-
-
-{/* <div>
-<Card>
-  <CardImg top width="100%" src="/images/team.jpg" alt="Card image cap" />
-  <CardBody>
-    <CardTitle>{res.email}</CardTitle>
-    <CardSubtitle>{res.role}</CardSubtitle>
-    <CardText> 
-    <p>Your Manager: <input type= "text" value = {res.manager} /></p></CardText>
-  </CardBody>
-</Card>
-</div> */}

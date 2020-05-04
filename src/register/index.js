@@ -20,12 +20,17 @@ class Register extends React.Component {
       email: '',
       password: '',
       role:'',
+      skill:'',
       manager:''
     };
   }
 
   handleNameChange = event => {
     this.setState({ name: event.target.value });
+    //console.log(this.state.name,"this.state.name");
+  };
+  handleSkillChange = event => {
+    this.setState({ skill: event.target.value });
     //console.log(this.state.name,"this.state.name");
   };
   handleRoleChange = event => {
@@ -58,7 +63,7 @@ class Register extends React.Component {
       manager: this.state.manager
     };
 console.log(user);
-    axios.post("http://localhost:3020/api/signup", { user }).then(res => {
+    axios.post(`${TRELLO_API}/signup`, { user }).then(res => {
       console.log("===============",res)
       if (res.status === 200) {
         this.props.history.push('/login');
@@ -118,6 +123,20 @@ console.log(user);
               />
             </Col>
           </FormGroup>
+          <FormGroup controlId="formHorizontalSkill">
+            <Col componentClass={ControlLabel} sm={2}>
+              Your Skill
+            </Col>
+            <Col sm={10}>
+              <FormControl
+                type="skill"
+                placeholder="Skill"
+                name="skill"
+                required
+                onChange={this.handleSkillChange}
+              />
+            </Col>
+            </FormGroup>
           <FormGroup controlId="formHorizontalManager">
             <Col componentClass={ControlLabel} sm={2}>
             Manager 
