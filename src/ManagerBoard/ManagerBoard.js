@@ -1,3 +1,6 @@
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
+import Loader from 'react-loader-spinner'
 import React from 'react';
 import { Image } from 'react-bootstrap';
 import {
@@ -22,8 +25,10 @@ class ManagerDashboard extends React.Component {
     this.el = document.createElement('div');
    
     this.state = {
+      isLoading: false,
       showuserModal: false,
       showModal:false,
+      
       token : window.localStorage.getItem('token'),
       res:'',
       employee:{
@@ -33,8 +38,15 @@ class ManagerDashboard extends React.Component {
         courseData:[]
       }    
     };
-   
+   this.closeModal = this.closeModal.bind(this);
   }
+  closeModal(){
+    this.setState({
+      showModal:false,
+      showuserModal:false
+    })
+  }
+
   componentDidMount = async () =>{
 
     await axios.get(`${TRELLO_API}/employees`, {
@@ -92,15 +104,16 @@ class ManagerDashboard extends React.Component {
     console.log(userEmail);
     await axios.post(`${TRELLO_API}/courses`,{userEmail}).then(res =>{
      
-     this.setState({courses:res.data}); 
-     
-     
+     this.setState({courses:res.data});          
     })
     let courseValue = this.state.courses;
     this.state.value = courseValue;
     console.log(this.state.value); 
    if (courseValue){
     this.setState({showModal:false});   
+   }
+   else{
+    
    }
   }
 
@@ -146,17 +159,18 @@ class ManagerDashboard extends React.Component {
         
           </div>
           
-          <ReactModal
-          isOpen={showModal}
+          <Modal
+          open={showModal}
           className="Modal"
           overlayClassName="Overlay"
-          contentLabel="Inline Styles Modal Example">
+          contentLabel="Inline Styles Modal Example"
+          onClose={this.closeModal}>
             
-            <div class="table-responsive">
+            <div>
           <table class="table table-striped">
       <thead>
         <tr>
-          <th>No</th>
+          <th>Name</th>
           <th>Email</th>
           <th>Designation</th>
           <th>Manager</th>
@@ -167,12 +181,14 @@ class ManagerDashboard extends React.Component {
       <tbody>
       {this.state.data !== undefined ? this.state.data.map((element,i) => 
       
-        <tr> 
-          <th scope="row">{i}</th>
+        <tr key={i}> 
+          <th>{element.name}</th>
           <td >{element.email}</td>
           <td>{element.role}</td>
           <td>{element.manager} </td>
-          <td><input className="btn btn-sm  btn-success" id="email"  type="submit" value="Get Course" onClick={this.getCourse.bind(this,element.email)} /></td>
+          <td><input className="btn btn-sm  btn-success" disabled={this.state.isLoading} type="submit" value="Get Course" onClick={this.getCourse.bind(this,element.email)} >
+                 </input>
+          </td>
         </tr> 
        
   ): null}
@@ -180,21 +196,23 @@ class ManagerDashboard extends React.Component {
         </tbody>
         </table>
             </div>
-           <div className="closeModal"><Button color= "btn btn-sm btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
+           {/* <div className="closeModal"><Button color= "btn btn-sm btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div> */}
           
-        </ReactModal>
+        </Modal>
         
         {this.state.value !== undefined ? this.state.value.map((element) => 
+        <div  className = "card-layout">
       <div className="card">
-        <div className = "col-md-4 col-sm-12" style={{ "backgroundColor" : "white" ,"paddingTop":"10px" }}>  
+        <div className = "column" style={{ "backgroundColor" : "#fdedd4" ,"paddingTop":"10px" }}>  
         <Image className="card-img-top" src= {element.image_480x270} alt="Card image cap" responsive />
         <div className="card-body">
           <h2 className= "card-title" >{element.title}</h2>
           {/* <CardSubtitle>{element.url}</CardSubtitle> */}
           {/* <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText> */}
           <hr style = {{"height":"2px","backgroundColor":"green","color":"green"}}></hr>
-          <button className = "btn btn-success" style= {{paddingBottom:"5px"}} onClick={this.assignCourse.bind(this,element)}>Assign Course</button>
+          <button className = "btn btn-success" style= {{"marginBottom":"5px"}} onClick={this.assignCourse.bind(this,element)}>Assign Course</button>
        </div>
+        </div>
         </div>
         </div>
         ): null}
@@ -205,17 +223,17 @@ class ManagerDashboard extends React.Component {
                 
         </h1>
     
-        <ReactModal
-          isOpen={showuserModal}
+        <Modal
+          open={showuserModal}
           className="Modal"
           overlayClassName="Overlay"
-          contentLabel="Inline Styles Modal Example">
-            
+          contentLabel="Inline Styles Modal Example"
+           onClose= {this.closeModal}>
             <div>
           <Table>
       <thead>
         <tr>
-          <th>#</th>
+          <th>Name</th>
           <th>Email</th>
           <th>Designation</th>
           <th>Manager</th>
@@ -223,7 +241,7 @@ class ManagerDashboard extends React.Component {
       </thead>
       <tbody>
         <tr>
-          <th scope="row">1</th>
+          <td><input type="text" value={res.name} ></input></td>
           <td><input type="text" value={res.email} ></input></td>
           <td><input type="text" value={res.role} /></td>
           <td><input type="text" value={res.manager} /></td>
@@ -232,8 +250,8 @@ class ManagerDashboard extends React.Component {
         </Table>
             </div>
            
-            <div className="closeModal"> <Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
-        </ReactModal>
+            {/* <div className="closeModal"> <Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div> */}
+        </Modal>
 
       </section>
       </React.Fragment>

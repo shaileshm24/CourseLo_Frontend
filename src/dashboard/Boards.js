@@ -1,3 +1,5 @@
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
 import React from 'react';
 import {Image } from 'react-bootstrap';
 import {
@@ -19,6 +21,7 @@ class Boards extends React.Component {
     
     this.state = {
       showModal: false,
+      showCourse:false,
       token : window.localStorage.getItem('token'),
       course:{
         title: '',
@@ -27,6 +30,19 @@ class Boards extends React.Component {
       }
       
     };
+    this.closeModal = this.closeModal.bind(this);
+    this.showCourse = this.showCourse.bind(this);
+  }
+
+  showCourse=()=>{
+    this.setState({
+      showCourse:false
+    })
+  }
+  closeModal(){
+    this.setState({
+      showModal:false
+    })
   }
 
   handleOpenModal= async() =>{
@@ -39,6 +55,7 @@ class Boards extends React.Component {
     }).then(res => {
       console.log(res)
         this.setState(res.data);
+        this.setState({showCourse:true});
         //this.setState({course:res.data.course}) 
      });
   }
@@ -55,7 +72,8 @@ class Boards extends React.Component {
       }
     }).then(res => {
       console.log(res);
-        this.setState({course:res.data.course}) 
+        this.setState({course:res.data.course});
+       
      });
 
   }
@@ -72,9 +90,12 @@ class Boards extends React.Component {
   }
 
   render() {
-    let { showModal } = this.state;
+    let { showModal} = this.state;
     let res = this.state;
     let course = this.state.course;
+    var divStyle = {
+      display:this.state.showCourse?'block':'none'
+    };
     // let course = res.course;
 //console.log("course.image_480x270,==============,course.title,==============,course.url",course.title);
     return (
@@ -93,11 +114,12 @@ class Boards extends React.Component {
           </Button>       
         </h1>
 
-        <ReactModal
-          isOpen={showModal}
+        <Modal
+          open={showModal}
           className="Modal"
           overlayClassName="Overlay"
-          contentLabel="Inline Styles Modal Example">
+          contentLabel="Inline Styles Modal Example"
+          onClose={this.closeModal}>
           <div>
             <Table>
               <thead>
@@ -122,19 +144,23 @@ class Boards extends React.Component {
            
                   
             </div>
-            <Button className="closeModal" color="btn btn-success" onClick={this.courseData}>Your Course</Button>
-            <div className="closeModal"><Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div>
-        </ReactModal>
+            {/* <Button className="closeModal" color="btn btn-success" onClick={this.courseData}>Your Course</Button> */}
+            {/* <div className="closeModal"><Button color= "btn btn-danger" onClick={this.handleCloseModal}>Close Modal</Button></div> */}
+        </Modal>
         
-        <h2>Your Course</h2>
+        <div style={divStyle}>  
+        <h2>Your Course</h2>             
+        <div  className = "card-layout" >
         <div className="card" >
-        <div className = "col-md-4 col-sm-12"  style={{ "backgroundColor" : "white" ,"paddingTop":"10px" }}>  
+        <div className = "column" style={{ "backgroundColor" : "#fdedd4" ,"paddingTop":"10px" }}> 
         <Image className="card-img-top" src= {course.image_480x270} alt="Card image cap" responsive />
         <div className="card-body">
           <h3 className= "card-title" >Title:-  {course.title}</h3>
           <hr style = {{"height":"2px","backgroundColor":"green","color":"green"}}></hr>
-          <Link to="#" style={{"fontSize":"26px","color":"green"}} onClick={this.getCourse.bind(this,course.url)}>Get Course Here</Link>
+          <Link to="#" style={{"fontSize":"20px","color":"green"}} onClick={this.getCourse.bind(this,course.url)}>Get Course Here</Link>
        </div>
+       </div>
+        </div>
         </div>
         </div>
       </section>
