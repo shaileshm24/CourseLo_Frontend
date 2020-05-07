@@ -18,16 +18,16 @@ function Header() {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavItem eventKey={1} className="sign-up">
-              <Link to ={"/register"} style = {{color:'grey'}}>
-              Sign Up
+              <Link to={"/register"} style={{ color: 'grey' }}>
+                Sign Up
               </Link>
             </NavItem>
-            <NavItem eventKey={2}  className="sign-in">
-            <Link to ={"/login"} style = {{color:'grey'}}>
-              Log In
+            <NavItem eventKey={2} className="sign-in">
+              <Link to={"/login"} style={{ color: 'grey' }}>
+                Log In
               </Link>
             </NavItem>
-            </Nav>
+          </Nav>
         </Navbar.Collapse>
       </Navbar>
     </header>

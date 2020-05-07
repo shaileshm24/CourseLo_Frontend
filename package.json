@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "gitRepo":"git+https://github.com/shaileshm24/CourseLo_Frontend.git",
     "auth0-js": "^9.8.0",
     "auto-bind": "^1.2.1",
     "axios": "^0.18.0",

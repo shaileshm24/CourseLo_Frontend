@@ -11,15 +11,15 @@ function Header() {
         <Navbar.Header>
           <Navbar.Brand>
             <Link to={`/`}>
-              <Image src="/images/logo1.svg"  responsive />
+              <Image src="/images/logo1.svg" responsive />
             </Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
-           Welcome 
-            
+            Welcome 
+
             </Nav>
         </Navbar.Collapse>
       </Navbar>
