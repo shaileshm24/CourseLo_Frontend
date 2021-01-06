@@ -6,7 +6,7 @@
     "gitRepo":"git+https://github.com/shaileshm24/CourseLo_Frontend.git",
     "auth0-js": "^9.8.0",
     "auto-bind": "^1.2.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bootstrap": "^3.4.1",
     "history": "^4.10.1",
     "husky": "^0.14.3",
